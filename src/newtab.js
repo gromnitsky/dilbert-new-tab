@@ -50,6 +50,14 @@ let $ = function(t) { return document.querySelector(t) }
 let render = function(view) {
     $('#app').innerHTML = Mustache.render($('#page').innerHTML, view)
     $('#refresh').onclick = refresh
+
+    // load an actual image & replace the animated placeholder w/ it
+    let img = document.createElement('img')
+    img.src = $('#img').dataset.img
+    img.onload = () => {
+	$('#img').innerHTML = ''
+	$('#img').appendChild(img)
+    }
 }
 
 let msg = function(t) {
