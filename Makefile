@@ -1,6 +1,6 @@
 pkg.name := $(shell json -e 'this.q = this.name + "-" + this.version' q < src/manifest.json)
 out := _build
-src := $(wildcard src/*)
+src := $(shell find src -type f)
 
 mkdir = @mkdir -p $(dir $@)
 

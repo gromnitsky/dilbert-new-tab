@@ -1,5 +1,7 @@
 'use strict';
 
+/* global Mustache */
+
 // from 1989-04-16 up to yesterday
 let random_date = function() {
     let rr = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
@@ -18,56 +20,45 @@ let random_date = function() {
     return `${y}-${m}-${d}`
 }
 
+let comic_fetch = function() {
+    let date = random_date()
+    return fetch(`http://dilbert.com/strip/${date}`)
+	.then( r => r.text())
+	.then( text => ({date, text}))
+}
+
+let comic_parse = function(comic) {
+    let doc = new DOMParser().parseFromString(comic.text, "text/html")
+    let div = doc.querySelector('.comic-item-container')
+    if (!div) throw new Error('invalid results from the server')
+
+    return {
+	title: div.dataset.date,
+	date: comic.date,
+	img: div.dataset.image,
+	tags: div.dataset.tags.split(',')
+	    .filter( v => v.length).map( v => ({
+		url_comp: encodeURIComponent(v),
+		name: v
+	    })),
+	desc: div.dataset.description
+    }
+}
+
 let $ = function(t) { return document.querySelector(t) }
 
-let errx = function(err) {
-    $('#img').innerHTML = `<b>Error:</b> ${err.message}`
+let render = function(view) {
+    $('#app').innerHTML = Mustache.render($('#page').innerHTML, view)
+    $('#refresh').onclick = refresh
 }
 
-let clean = function() {
-    ['date', 'img', 'tags', 'desc'].forEach( v => $(`#${v}`).innerHTML = '')
-}
-
-let render = function(data) {
-    let doc = new DOMParser().parseFromString(data.html, "text/html")
-    let div = doc.querySelector('.comic-item-container')
-    if (!div) errx(new Error('invalid results from the server'))
-
-    $('#date').innerText = div.dataset.date
-    $('#img').innerHTML = `<a href="http://dilbert.com/strip/${data.date}"><img src="${div.dataset.image}"></a>`
-
-    if (div.dataset.tags) {
-	$('#tags').innerHTML = div.dataset.tags.split(',').map( tag => {
-	    return `<a href="http://dilbert.com/search_results?terms=${encodeURIComponent(tag)}">#${tag}</a>`
-	}).join("\n")
-    }
-    $('#desc').innerText = div.dataset.description
-}
-
-let comics_get = async function main() {
-    $('#refresh').style.display = 'none'
-    $('#img').innerHTML = `<h1>Loading...</h1>`
-
-    let html
-    let date = random_date()
-    try {
-	html = await fetch(`http://dilbert.com/strip/${date}`)
-	    .then( r => r.text())
-    } catch (e) {
-	errx(new Error(`Failed to fetch: ${e}`))
-    } finally {
-	$('#refresh').style.display = 'inline-block'
-	$('#img').innerHTML = ''
-    }
-    return {html, date}
+let msg = function(t) {
+    $('#app').innerHTML = Mustache.render($('#msg').innerHTML, {msg: t})
 }
 
 let refresh = function() {
-    clean()
-    comics_get().then(render)
+    msg('Fetching...')
+    comic_fetch().then(comic_parse).then(render).catch(msg)
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    $('#refresh').onclick = refresh
-    refresh()
-})
+document.addEventListener('DOMContentLoaded', refresh)

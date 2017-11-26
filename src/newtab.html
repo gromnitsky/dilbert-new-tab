@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <style type="text/css">
   img { max-width: 100%; }
-  #app {
+  #container {
     display: flex;
     position: absolute;
     top:0;
@@ -10,7 +10,7 @@
     right:0;
     left:0;
   }
-  #app > div {
+  #app {
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -20,26 +20,40 @@
     justify-content: space-between;
     align-items: center;
   }
-  #date { font-size: large; }
+  .title { font-size: large; }
   #footer {
     max-width: 600px;
     margin: auto;
   }
 </style>
 
-<div id='app'>
-  <div>
-    <p id="topbar">
-      <button id="refresh">Get another</button><span id='date'></span>
+<template id="page">
+  <p id='topbar'>
+    <button id="refresh">Get another</button>
+    <span class="title">{{ title }}</span>
+  </p>
+
+  <a href="http://dilbert.com/strip/{{ date }}"><img src="{{ img }}"></a>
+
+  <div id='footer'>
+    <p>
+      {{#tags}}
+      <a href="http://dilbert.com/search_results?terms={{url_comp}}">#{{name}}</a>
+      {{/tags}}
     </p>
+    <p>{{ desc }}</p>
+  </div>
+</template>
 
-    <div id='img'></div>
+<template id='msg'>
+  <h1>{{ msg }}</h1>
+</template>
 
-    <div id='footer'>
-      <p id='tags'></p>
-      <p id='desc'></p>
-    </div>
+<div id='container'>
+  <div id='app'>
+    <!-- render -->
   </div>
 </div>
 
+<script src="vendor/mustache.min.js"></script>
 <script src="newtab.js"></script>
