@@ -15,3 +15,8 @@ $(out)/$(pkg.name).zip: $(src)
 
 private.pem:
 	openssl genrsa 2048 > $@
+
+# sf
+
+upload:
+	scp $(out)/$(pkg.name).crx gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
