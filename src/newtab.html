@@ -45,7 +45,36 @@
   }
 </style>
 
-<template id="page">
+<template id="loading_indicator">
+  <svg width="200px" viewBox="0 0 64 64" class="img--placeholder">
+    <path data-name="layer2"
+	  d="M44.1 47.9l5.1 7a7 7 0 0 0 12.7-5.4L57.8 28a12 12 0 0 0-11.2-9.9H18A12 12 0 0 0 6.2 28l-4 21.6A7 7 0 0 0 14.9 55l5.1-7m5.9-4h12.2"
+	  fill="none" stroke="#302a63" stroke-linecap="round"
+	  stroke-linejoin="round"
+	  stroke-width="2"></path>
+    <circle data-name="layer1" cx="39" cy="29" r="3" fill="none"
+	    stroke="#5649cf" stroke-linecap="round" stroke-linejoin="round"
+	    stroke-width="2"></circle>
+    <circle data-name="layer1" cx="49" cy="31" r="3" fill="none"
+	    stroke="#5649cf" stroke-linecap="round"
+	    stroke-linejoin="round" stroke-width="2"></circle>
+    <path data-name="layer1" fill="none" stroke="#5649cf"
+	  stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+	  d="M18 26v8m-4-4h8"></path>
+    <path data-name="layer2" fill="none" stroke="#302a63"
+	  stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+	  d="M32 18V6"></path>
+    <circle data-name="layer1" cx="21" cy="43" r="5" fill="none"
+	    stroke="#5649cf" stroke-linecap="round" stroke-linejoin="round"
+	    stroke-width="2"></circle>
+    <circle data-name="layer1" cx="43" cy="43" r="5" fill="none"
+	    stroke="#5649cf" stroke-linecap="round" stroke-linejoin="round"
+	    stroke-width="2"></circle>
+  </svg>
+</template>
+
+<!-- why a script tag? see https://github.com/janl/mustache.js/issues/634 -->
+<script id="page" type="text/mustache">
   <p id='topbar'>
     <button id="refresh">Get another</button>
     &nbsp;
@@ -54,31 +83,7 @@
 
   <div class='centered'>
     <a id='img' data-img="{{ img }}" href="http://dilbert.com/strip/{{ date }}">
-      <svg width="200px" viewBox="0 0 64 64" class="img--placeholder">
-	<path data-name="layer2"
-	      d="M44.1 47.9l5.1 7a7 7 0 0 0 12.7-5.4L57.8 28a12 12 0 0 0-11.2-9.9H18A12 12 0 0 0 6.2 28l-4 21.6A7 7 0 0 0 14.9 55l5.1-7m5.9-4h12.2"
-	      fill="none" stroke="#302a63" stroke-linecap="round"
-	      stroke-linejoin="round"
-	      stroke-width="2"></path>
-	<circle data-name="layer1" cx="39" cy="29" r="3" fill="none"
-		stroke="#5649cf" stroke-linecap="round" stroke-linejoin="round"
-		stroke-width="2"></circle>
-	<circle data-name="layer1" cx="49" cy="31" r="3" fill="none"
-		stroke="#5649cf" stroke-linecap="round"
-		stroke-linejoin="round" stroke-width="2"></circle>
-	<path data-name="layer1" fill="none" stroke="#5649cf"
-	      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-	      d="M18 26v8m-4-4h8"></path>
-	<path data-name="layer2" fill="none" stroke="#302a63"
-	      stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-	      d="M32 18V6"></path>
-	<circle data-name="layer1" cx="21" cy="43" r="5" fill="none"
-		stroke="#5649cf" stroke-linecap="round" stroke-linejoin="round"
-		stroke-width="2"></circle>
-	<circle data-name="layer1" cx="43" cy="43" r="5" fill="none"
-		stroke="#5649cf" stroke-linecap="round" stroke-linejoin="round"
-		stroke-width="2"></circle>
-      </svg>
+      {{> loading_indicator}}
     </a>
   </div>
 
@@ -90,7 +95,7 @@
     </p>
     <p>{{ desc }}</p>
   </div>
-</template>
+</script>
 
 <template id='msg'>
   <h1>{{ msg }}</h1>

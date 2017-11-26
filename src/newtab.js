@@ -48,7 +48,9 @@ let comic_parse = function(comic) {
 let $ = function(t) { return document.querySelector(t) }
 
 let render = function(view) {
-    $('#app').innerHTML = Mustache.render($('#page').innerHTML, view)
+    $('#app').innerHTML = Mustache.render($('#page').innerText, view, {
+	loading_indicator: $('#loading_indicator').innerHTML
+    })
     $('#refresh').onclick = refresh
 
     // load an actual image & replace the animated placeholder w/ it
