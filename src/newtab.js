@@ -55,7 +55,8 @@ let render = function(view) {
 
     // load an actual image & replace the animated placeholder w/ it
     let img = document.createElement('img')
-    img.src = $('#img').dataset.img
+    let url = $('#img').dataset.img
+    img.src = url.startsWith('https:') ? url : 'https:' + url
     img.onload = () => {
 	$('#img').innerHTML = ''
 	$('#img').appendChild(img)

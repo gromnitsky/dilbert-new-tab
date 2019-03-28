@@ -7,6 +7,6 @@
     },
     "manifest_version": 2,
     "permissions": [
-	"http://dilbert.com/*"
+	"*://dilbert.com/*"
     ]
 }
