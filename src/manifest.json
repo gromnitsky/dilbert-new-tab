@@ -1,6 +1,6 @@
 {
     "name": "dilbert-new-tab",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Shows a random Dilbert comics in a new tab",
     "chrome_url_overrides": {
       "newtab": "newtab.html"
