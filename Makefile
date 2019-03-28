@@ -1,22 +1,15 @@
-pkg.name := $(shell json -e 'this.q = this.name + "-" + this.version' q < src/manifest.json)
-out := _build
+out := _out
 src := $(shell find src -type f)
+crx := $(out)/$(shell json -d- -a name version < src/manifest.json).crx
 
-mkdir = @mkdir -p $(dir $@)
-
-crx: $(out)/$(pkg.name).crx
-
-$(out)/$(pkg.name).zip: $(src)
-	$(mkdir)
-	cd $(dir $<) && zip -qr $(CURDIR)/$@ *
-
-%.crx: %.zip private.pem
-	./zip2crx.sh $< private.pem
+crx: $(crx)
+$(crx): private.pem $(src)
+	google-chrome --pack-extension=src --pack-extension-key=$<
+	@mkdir -p $(dir $@)
+	mv src.crx $@
 
 private.pem:
-	openssl genrsa 2048 > $@
+	openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out $@
 
-# sf
-
-upload:
-	scp $(out)/$(pkg.name).crx gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
+upload: $(crx)
+	scp $< gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
